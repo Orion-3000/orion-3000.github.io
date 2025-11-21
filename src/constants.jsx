@@ -1,0 +1,3 @@
+
+
+export const bkimg1 = "https://images.unsplash.com/photo-1456421385613-d0666bb96b78?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1474&q=80"

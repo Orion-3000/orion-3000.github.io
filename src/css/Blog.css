@@ -1,0 +1,45 @@
+.blog {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color:#2980b9 ;
+}
+
+.blogcard {
+  background-color: transparent;
+  height: 600px;
+  perspective: 1000px;
+  font-size: 30px;
+  text-align: center;
+
+}
+
+.blogcardinner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.blogcard:hover .blogcardinner {
+  transform: rotateY(180deg);
+}
+
+.blogcardfront, .blogcardback {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.blogcardfront {
+  background-color: #2980b9;
+  color: black;
+}
+
+.blogcardback {
+  color: white;
+  transform: rotateY(180deg);
+}
