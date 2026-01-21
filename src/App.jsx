@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Calendar, MapPin, Briefcase, ChevronDown, ArrowRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
+
+import CoverLetter from './components/CoverLetter';
+import GoalsChart from './components/GoalsChart';
+import Skills from './components/Skills';
 
 // --- Asset Configuration ---
 // FOR LOCAL DEV: Ensure these match your actual file paths
@@ -20,6 +24,7 @@ import amdLogo from './assets/logo_amd.png';
 import uaiLogo from './assets/logo_uai.jpg';
 import sinaiLogo from './assets/logo_sinai.png';
 import uoftcsLogo from './assets/logo_uoftcs.png';
+import mlLogo from './assets/logo_ML.jpg';
 
 // FOR PREVIEW: Placeholders
 // const doorClosedImg = "https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=1000&auto=format&fit=crop";
@@ -83,8 +88,11 @@ const Footer = () => (
   <footer className="w-full flex justify-center items-center gap-6 py-8 text-white/40 pointer-events-auto bg-black/10 backdrop-blur-sm z-50 relative">
     <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-300 transform hover:scale-110"><Github size={18} /></a>
     <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-300 transform hover:scale-110"><Linkedin size={18} /></a>
+    <a href="/goals" className="ml-2 px-3 py-1 text-sm bg-white/5 hover:bg-white/10 rounded-md border border-white/10 hover:border-white/30 transition-colors">Goals Chart Organizer</a>
+    <a href="/skills" className="ml-2 px-3 py-1 text-sm bg-white/5 hover:bg-white/10 rounded-md border border-white/10 hover:border-white/30 transition-colors">Skills</a>
+    <a href="/letter" className="ml-2 px-3 py-1 text-sm bg-white/5 hover:bg-white/10 rounded-md border border-white/10 hover:border-white/30 transition-colors">Letter</a>
     <div className="h-4 w-px bg-white/20"></div>
-    <span className="text-[10px] md:text-xs font-serif tracking-widest uppercase opacity-60">© 2025 Huayin Luo</span>
+    <span className="text-[10px] md:text-xs font-serif tracking-widest uppercase opacity-60">© 2025 Michael Luo</span>
   </footer>
 );
 
@@ -176,7 +184,7 @@ const HomePage = ({ onEnter }) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          Huayin
+          Michael
         </motion.div>
         <motion.div 
           className="absolute right-[10%] md:right-[15%] text-white font-serif text-5xl md:text-8xl font-bold drop-shadow-xl"
@@ -230,8 +238,8 @@ const AboutPage = () => {
             transition={{ duration: 0.8 }}
             >
             <div className="mb-10">
-                <h1 className="text-4xl md:text-6xl font-serif text-black mb-4">Hi! I'm Huayin.</h1>
-                <h2 className="text-xl md:text-3xl italic text-black/80 font-serif">Welcome to my site 👋</h2>
+                <h1 className="text-4xl md:text-6xl font-serif text-black mb-4">Hi! I'm Michael.</h1>
+                <h2 className="text-xl md:text-3xl italic text-black/80 font-serif">Welcome to my portfolio 👋</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-8"> 
@@ -239,7 +247,8 @@ const AboutPage = () => {
                     className="p-6 md:p-8 rounded-xl shadow-lg text-white/90 leading-relaxed transform -rotate-1 transition-transform hover:rotate-0" 
                     style={{ backgroundColor: CARD_COLORS.exploring }}
                 >
-                    <p>🎓 I'm a fourth year student studying Data Science and Molecular Genetics at the University of Toronto. <i>(Expected graduation: April 2026)</i></p>
+                    <p>🎓 Grade 10 student at Unionville High School with experience working in academic research labs and industry engineering teams.
+                       Contributed to production ML systems, compiler infrastructure, and large-scale research pipelines while maintaining a full secondary school course load. <i>(Expected graduation: 2028)</i></p>
                 </div>
 
                 <div 
@@ -247,8 +256,8 @@ const AboutPage = () => {
                     style={{backgroundColor: CARD_COLORS.learning}}
                 >
                     <p className="mb-4">
-                        💻 I've engineered <strong>RAG agents</strong> for GPU debugging at AMD, worked on <strong>model quantization</strong> and <strong>compiler graph optimization</strong> for
-                    AI inference at Untether AI, and developed <strong>computer vision pipelines</strong> for connectomics research.
+                        Built a <strong>vector-indexed retrieval system</strong> capable of searching <strong>multi-million-line codebases</strong> using semantic embeddings and keyword filtering.
+                         Designed <strong>retrieval-augmented generation (RAG)</strong> pipelines to summarize, trace, and explain complex code paths. Implemented <strong>model optimization techniques</strong> including quantization-aware workflows and graph-level transformations to improve inference efficiency and reliability.
                     </p>
                 </div>
 
@@ -256,7 +265,7 @@ const AboutPage = () => {
                     className="p-6 md:p-8 rounded-xl shadow-lg text-white/90 leading-relaxed transform -rotate-1 transition-transform hover:rotate-0" 
                     style={{backgroundColor: CARD_COLORS.creating}}
                 >
-                    <p>🍪 In my spare time, I like to learn musical themes on the piano, bake, and swim. I also like reading, and enjoy making videos on books and poems.</p>
+                    <p>🍪 In my spare time, I like to learn musical themes on the violin, bake, and swim. I also like reading, and enjoy making videos on books and poems.</p>
                     <div className="text-sm opacity-80 space-y-2 mt-4">
                         <p><strong>Favs:</strong> Howl's Moving Castle, Lord of the Rings, A Tree Grows in Brooklyn</p>
                     </div>
@@ -374,62 +383,66 @@ const ProjectDisplay = ({ activeProjectIndex, onSelectProject }) => {
 const RESUME_DATA = [
   {
     id: 1,
-    role: "Software Engineering Intern",
-    company: "AMD",
-    period: "July 2025 - August 2025",
-    location: "Markham, ON",
-    description: "Built a vector-indexed code retrieval agent for large C/C++ GPU drivers. Designed a RAG workflow in LangChain to automate debug reports. Deployed as an MCP server integrated into AMD's automated debug pipeline.",
-    logo: amdLogo, // Placeholder
+    role: "Large-Scale Code Intelligence",
+    company: "Independent Project",
+    period: "2024 – Present",
+    location: "Personal Work",
+    description:
+      "Designed systems for understanding and navigating extremely large codebases using semantic search and retrieval-augmented generation.",
+    logo: mlLogo,
     details: [
-      "Built a vector-indexed code retrieval agent for multi-million-line C/C++ GPU drivers with hybrid search (semantic + keyword/grep) and incremental indexing, turning call-graph waits that could take weeks into hours/minutes.",
-      "Designed a RAG (retrieval-augmented generation) workflow in LangChain that takes prior debug signals, retrieves the most relevant code with hybrid search and re-ranking, then feeds those code spans plus context to a large language model to generate the final debug report.",
-      "Deployed as an MCP (Model Context Protocol) server and integrated into AMD's automated debug pipeline so incident reports automatically include relevant code pointers and concise summaries.",
-      "Presented to engineering leadership; selected for the AMD Innovation Showcase with a planned rollout across GPU teams."
+      "Built a vector-indexed code retrieval system capable of searching multi-million-line C/C++ codebases using semantic embeddings combined with keyword and structural filtering.",
+      "Designed retrieval-augmented generation (RAG) pipelines to trace execution paths, summarize complex logic, and surface relevant files and functions with minimal hallucination.",
+      "Implemented indexing, chunking, and re-ranking strategies to balance accuracy, latency, and scalability for large repositories.",
+      "Focused on code reasoning, system design, and automation rather than simple demo-level search."
     ]
   },
   {
     id: 2,
-    role: "Deep Learning Engineer",
-    company: "Untether AI",
-    period: "Aug 2024 - June 2025",
-    location: "Toronto, ON",
-    description: "Implemented static and dynamic quantization (FP8, SFP16). Built compiler graph optimizations and broad model ingestion support. Set up CI/regression for 200+ models.",
-    logo: uaiLogo, // Placeholder
+    role: "Model Optimization & ML Systems",
+    company: "Independent Project",
+    period: "2024 – Present",
+    location: "Personal Work",
+    description:
+      "Explored model optimization techniques and ML infrastructure for efficient and reliable inference.",
+    logo: mlLogo,
     details: [
-      "Implemented static and dynamic quantization (FP8, SFP16) and authored quantized operators (VarianceNorm, spline), with calibration and validation against floating-point baselines.",
-      "Built compiler graph optimizations (canonicalization, constant folding, fusion, transpose elimination, and quantize/dequantize insertion) and added a generic elementwise-fusion pass that broadened reliable ingestion to 50+ models (Swin, ViT, ResNet, DepthAnything; small language models including Mistral).",
-      "Reliability & testing: set up CI/regression for 200+ models with accuracy and latency baselines and alerts, replaced static artifacts with a reproducible quantize-and-compile pipeline, and added ONNX to custom IR coverage and validation with the compiler/hardware teams.",
-      "Partnered across teams to stabilize inference and streamline debugging and onboarding. Participated and presented at bi-weekly journal club on latest research in machine learning and model quantization."
+      "Implemented reduced-precision and quantization-aware workflows, exploring tradeoffs between accuracy, performance, and numerical stability.",
+      "Built graph-level optimizations including operator fusion, constant folding, and elimination of redundant operations.",
+      "Developed validation pipelines to compare optimized models against floating-point baselines using accuracy and performance metrics.",
+      "Focused on system-level understanding of inference pipelines rather than framework-specific shortcuts."
     ]
   },
   {
     id: 3,
-    role: "Research Assistant",
-    company: "Lunenfeld-Tanenbaum Research Institute",
-    period: "May 2023 - Aug 2024",
-    location: "Mount Sinai Hospital",
-    description: "Built an end-to-end ML application for calcium-imaging analysis. Developed a multi-target ConvLSTM tracker for neuron identities. Trained ensemble 2D/3D U-Nets for structure detection.",
-    logo: sinaiLogo, // Placeholder
+    role: "Applied Computer Vision Pipelines",
+    company: "Independent Project",
+    period: "2023 – Present",
+    location: "Personal Work",
+    description:
+      "Developed end-to-end computer vision systems for real-world, noisy data.",
+    logo: mlLogo,
     details: [
-      "Built an end-to-end ML application for calcium-imaging analysis and delivered a modular PyQt5 tool adopted by cross-disciplinary teams; coordinated integrations for smooth lab workflows.",
-      "Developed a multi-target ConvLSTM tracker for neuron identities, integrated segmentation, SAM-based outline segmentation, velocity/behavior analysis, and noise correction into a unified GUI.",
-      "Trained and fine-tuned ensemble 2D/3D U-Nets on highly imbalanced EM data to detect gap junctions, improving recall on rare structures and enabling connectome mapping.",
-      "Automated pipelines for multiscale-SEM segmentation, alignment, and stitching, reducing manual scoring from 200+ hours to minutes and enabling reproducible, real-time results for non-technical users."
+      "Built complete ML pipelines including preprocessing, training, evaluation, and visualization for real experimental data.",
+      "Trained ensemble 2D and 3D convolutional neural networks on highly imbalanced datasets to detect rare structures.",
+      "Implemented segmentation, tracking, and post-processing workflows with robustness to noise, drift, and incomplete data.",
+      "Emphasized reproducibility, modular design, and usability over benchmark-only performance."
     ]
   },
   {
     id: 4,
-    role: "Research Assistant",
-    company: "Intelligent Adaptive Interventions Lab",
-    period: "May 2022 - Jan 2024",
-    location: "University of Toronto",
-    description: "Built a multimodal chatbot with Azure and React. Led data analysis for studies using LLM agents. Researched statistically considerate bandits.",
-    logo: uoftcsLogo, // Placeholder
+    role: "Research-Driven Software Engineering",
+    company: "Independent Study",
+    period: "2022 – Present",
+    location: "Personal Work",
+    description:
+      "Translated research ideas into reliable, production-quality software systems.",
+    logo: mlLogo,
     details: [
-      "Built a multimodal chatbot (speech + text) with Azure speech-to-text/text-to-speech, React, and AWS DynamoDB; shipped production REST APIs, structured logging, and a consistent event schema.",
-      "Led data analysis and statistical evaluation for factorial and randomized studies using large language-model agents for behavior change and education (digital mindfulness, classroom reflection).",
-      "Researched statistically considerate bandits: implemented TSPostdiff (a Thompson Sampling adaptation) to support valid hypothesis testing under adaptivity; ran large simulation sweeps in Python/R and built Python dashboards to surface power, Type I/II error, and inference conditions.",
-      "Co-author on peer-reviewed publications and posters at ACM CSCW, Learning at Scale, JSM, and CODE@MIT."
+      "Built interactive systems combining machine learning models, APIs, and user-facing interfaces.",
+      "Designed clean, modular architectures with attention to documentation, testing, and long-term maintainability.",
+      "Read and implemented ideas from academic papers, adapting them to practical engineering constraints.",
+      "Focused on correctness, interpretability, and real-world usability rather than one-off experiments."
     ]
   }
 ];
@@ -596,7 +609,12 @@ const MainLayout = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <MainLayout />
+      <Routes>
+        <Route path="/" element={<MainLayout />} />
+        <Route path="/letter" element={<CoverLetter />} />
+        <Route path="/goals" element={<GoalsChart />} />
+        <Route path="/skills" element={<Skills />} />
+      </Routes>
     </BrowserRouter>
   );
 };
